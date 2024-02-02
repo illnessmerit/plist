@@ -13,6 +13,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # pin@v4
+      - name: Install stack
+        run: brew install haskell-stack
+      - run: stack --local-bin-path . install
       - uses: cachix/install-nix-action@6a9a9e84a173d90b3ffb42c5ddaf9ea033fad011 # pin@v23
       - uses: cachix/cachix-action@6a9a34cdd93d0ae4b4b59fd678660efb08109f2f # pin@v12
         with:
@@ -28,7 +31,6 @@ jobs:
           # https://stackoverflow.com/a/75641511
           nix-channel --add https://nixos.org/channels/nixpkgs-unstable
           nix-channel --update
-      - run: devenv shell build
       - run: devenv shell stack test
       - run: tar -czvf plist.tar.gz .
       # https://github.com/softprops/action-gh-release/blob/c9b46fe7aad9f02afd89b12450b780f52dacfb2d/README.md?plain=1#L45-L47
